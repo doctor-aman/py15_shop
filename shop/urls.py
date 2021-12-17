@@ -17,16 +17,28 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
 
 from order.views import CreateOrderView, UsersOrdersList, UpdateOrderStatusView
 
+schema_view = get_schema_view(
+    openapi.Info(
+        title='python 15 shop',
+        default_version='v1',
+        description='Интернет магазин'
+    )
+)
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/v1/docs/', schema_view.with_ui('swagger')),
     path('api/v1/', include('account.urls')),
     path('api/v1/', include('product.urls')),
     path('api/v1/orders/', CreateOrderView.as_view()),
     path('api/v1/orders/own/', UsersOrdersList.as_view()),
     path('api/v1/orders/own/', UpdateOrderStatusView.as_view())
+
 ]
 
 if settings.DEBUG:
